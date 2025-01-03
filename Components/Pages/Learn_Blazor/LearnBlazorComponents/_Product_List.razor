@@ -1,16 +1,109 @@
-﻿<h1>Product - @prop.Id</h1>
-<p>Name: @prop.Name</p>
-            Show Properties
-<input type="checkbox" @bind="prop.IsActive" />
-@if (prop.IsActive)
-{
-    @foreach (var prodList in prop.ProductProperties)
+﻿
+
+
+
+<div class="col-6 border p-3">
+    <h1>Product - Product.Id</h1>
+
+    <input type="checkbox" @onchange="FavoriteUpdated" /> Add to Favourites
+    <br />
+
+
+    <p>Name: Product.Name</p>
+    Show Properties <input type="checkbox" @bind="Product.IsActive" />
+    @if (Product.IsActive)
     {
-        <p>@prodList.Key - @prodList.Value </p>
+        @foreach (var prodList in Product.ProductProperties)
+        {
+            <p>@prodList.Key - @prodList.Value </p>
+        }
     }
-}
+    <br />
+    <_DeleteButtonComponent ProductId="Product.Id">
+
+    </_DeleteButtonComponent>
+</div>
+
+
 
 @code {
+
+    /*
+     * The {get; set;} syntax in C# is essential for properties for several important reasons:
+     *
+    In _Product_List.razor, the [Parameter] public Product Product { get; set; } declaration:
+    Allows Blazor to set the Product value from the parent component
+    Enables reading the Product value within the component
+    Creates proper property accessors (getter and setter methods) automatically
+    If you don't include {get; set;}:
+    The code won't compile
+    You'll get an error because the property needs both read and write access
+    Parameters in Blazor components must be properties, not fields
+    Why it's needed:
+    Blazor's parameter binding system requires properties to function
+    It maintains proper encapsulation of data
+    Enables two-way binding with @bind directives
+    Allows the component to be notified when the parameter value changes
+    Here's a practical example from your code:
+
     [Parameter]
-    List<Product> ProductList = new();
+    public Product Product { get; set; }
+
+
+
+    This allows you to:
+
+    Access Product.Name, Product.IsActive, etc. in your component
+    Update the Product from parent components
+    Use features like @bind with the Product properties
+    The property accessors are fundamental to how Blazor components communicate and share data with each other in a clean, maintainable way.
+     *
+     */
+
+    [Parameter]
+    public Product Product { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnFavoriteUpdated { get; set; }
+
+
+
+
+    /*
+     *
+
+
+
+    Context
+    — 2 items
+    Claude 3.5 Sonnet (New)
+    Looking at the code, the FavoriteUpdated method is handling checkbox changes in the Product List component. Here's what it does:
+
+    It takes a ChangeEventArgs parameter named args which contains the checkbox's new value when it changes
+    Inside the method, it:
+    Extracts the boolean value from args.Value
+    Uses the null coalescing operator ?? to default to false if the value is null
+    Invokes the parent component's callback through OnFavoriteUpdated.InvokeAsync()
+    The method is connected to the checkbox in the UI through this line:
+
+    <input type="checkbox" @onchange="FavoriteUpdated"/> Add to Favourites
+
+
+
+    Components\Pages\Learn_Blazor\LearnBlazorComponents_Product_List.razor
+    This creates a two-way communication where:
+
+    When user clicks the checkbox, FavoriteUpdated gets called
+    The method then notifies the parent component through the OnFavoriteUpdated EventCallback
+    The parent can react to these favorite status changes
+    This is a great example of child-to-parent component communication in Blazor using EventCallback.
+     */
+
+
+    private async Task FavoriteUpdated(ChangeEventArgs args)
+    {
+        await OnFavoriteUpdated.InvokeAsync((bool)(args.Value ?? false));
+    }
+
+
 }

@@ -4,16 +4,13 @@
 <h3>DemoProduct</h3>
 
 
+<p>Favorite Count: @FavoriteCount</p>
 <div class="row">
     @foreach (var prop in ProductList)
     {
-        <div class="col-6 border p-3">
-           
-            <br/>
-       <_DeleteButtonComponent ProductId="@prop.Id" >
+        <_Product_List Product="prop" onFavoriteUpdated="FavoriteCountChange">
 
-       </_DeleteButtonComponent>
-        </div>
+        </_Product_List>
     }
 </div>
 
@@ -23,6 +20,12 @@
 
 
 @code {
+    public int Count { get; set; } = 0;
+    public int FavoriteCount { get; set; } = 0;
+
+
+
+
     private string selectedProp = "";
 
     //One way binding is the value will be used the default one
@@ -79,6 +82,10 @@
                 new Product_Prop {Id = 3,Key = "Color",Value = "White"}
             }
             });
+
+
+
+
     }
 
 
@@ -91,6 +98,22 @@
     //     }
 
     // }
-   
+
+
+
+
+
+
+    protected void FavoriteCountChange(bool isSelected)
+    {
+        if(isSelected)
+        {
+            FavoriteCount++;
+        }
+        else
+        {
+            FavoriteCount--;
+        }
+    }
 
 }
