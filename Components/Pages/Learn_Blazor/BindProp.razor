@@ -32,7 +32,7 @@
 
         <br />
         Selected Prop : @selectedProp
-        @if (!string.IsNullOrEmpty(selectedProp))
+        @if (!string.IsNullOrEmpty(selectedProp))   
         {
             <p>Selected Value : @Product.ProductProperties.FirstOrDefault(u => u.Key == selectedProp).Value</p>
         }

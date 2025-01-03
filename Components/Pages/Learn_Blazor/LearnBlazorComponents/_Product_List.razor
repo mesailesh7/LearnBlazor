@@ -1,0 +1,16 @@
+﻿<h1>Product - @prop.Id</h1>
+<p>Name: @prop.Name</p>
+            Show Properties
+<input type="checkbox" @bind="prop.IsActive" />
+@if (prop.IsActive)
+{
+    @foreach (var prodList in prop.ProductProperties)
+    {
+        <p>@prodList.Key - @prodList.Value </p>
+    }
+}
+
+@code {
+    [Parameter]
+    List<Product> ProductList = new();
+}
