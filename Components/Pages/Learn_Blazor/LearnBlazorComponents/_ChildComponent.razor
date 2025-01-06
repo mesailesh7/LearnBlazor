@@ -1,0 +1,83 @@
+<div>
+    <div class="alert alert-info">
+        @Title
+    </div>
+    @if (ChildContent != null)
+    {
+        <div class="alert alert-success">
+            @ChildContent
+        </div>
+    }    
+    <button class="btn btn-danger" @onclick="OnButtonClick" >Click Me</button>
+</div>
+
+
+@code {
+    [Parameter] public string Title { get; set; }
+    
+    
+    //Render fragment is used to get text from the parent component
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnButtonClick { get; set; }
+}
+
+
+/*
+
+
+
+Context
+— 2 items
+Gemini 1.5 Pro
+Data is being sent from the child component (_ChildComponent.razor) to the parent component (ParentComponent.razor) using an EventCallback. Here's a breakdown of how it works:
+
+EventCallback in Child: The child component defines an EventCallback<MouseEventArgs> property named OnButtonClick. This creates a way for the child to notify the parent when something happens, in this case, a button click.
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnButtonClick { get; set; }
+
+        Copy
+
+        Apply
+
+
+        _ChildComponent.razor
+        Button Click in Child: The child component's button has its @onclick event bound to the OnButtonClick EventCallback. When the button is clicked, the OnButtonClick callback is invoked.
+
+        <button class="btn btn-danger" @onclick="OnButtonClick" >Click Me</button>
+
+        Copy
+
+        Apply
+
+
+        _ChildComponent.razor
+        EventCallback Passed from Parent: The parent component passes a method ShowMessage to the child's OnButtonClick parameter. This method is what will be executed in the parent when the child's button is clicked.
+
+        <_ChildComponent OnButtonClick="ShowMessage" ... >
+
+            Copy
+
+            Apply
+
+
+            ParentComponent.razor
+            ShowMessage Method in Parent: The ShowMessage method in the parent component updates the messageText variable. This change triggers the UI to re-render, displaying the message.
+
+            @code {
+                private void ShowMessage()
+                {
+                    messageText = "Button inside child component was clicked";
+                }
+            }
+
+            Copy
+
+            Apply
+
+
+            ParentComponent.razor
+            In summary, the child component doesn't directly send data. Instead, it notifies the parent of an event (the button click) through the EventCallback. The parent provides the method to be executed in response to that event, allowing the parent to update its own state and UI. This is a common pattern in Blazor for child-to-parent communication. It keeps components loosely coupled and promotes a unidirectional data flow.*/

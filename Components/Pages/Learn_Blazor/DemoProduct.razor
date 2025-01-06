@@ -5,10 +5,13 @@
 
 
 <p>Favorite Count: @FavoriteCount</p>
+<p>Selected Product: @SelectedProduct</p>
 <div class="row">
     @foreach (var prop in ProductList)
     {
-        <_Product_List Product="prop" onFavoriteUpdated="FavoriteCountChange">
+        <_Product_List Product="prop" onFavoriteUpdated="FavoriteCountChange"
+                       OnSelectedProductChange="UpdateSelectedProduct">
+            
 
         </_Product_List>
     }
@@ -22,11 +25,8 @@
 @code {
     public int Count { get; set; } = 0;
     public int FavoriteCount { get; set; } = 0;
-
-
-
-
-    private string selectedProp = "";
+    List<Product> ProductList = new();
+    private string SelectedProduct { get; set; } = string.Empty;
 
     //One way binding is the value will be used the default one
     // Two way binding is the value will be changed directly to the product
@@ -51,7 +51,6 @@
         };
 
 
-    List<Product> ProductList = new();
 
     protected override void OnInitialized()
     {
@@ -99,11 +98,7 @@
 
     // }
 
-
-
-
-
-
+    
     protected void FavoriteCountChange(bool isSelected)
     {
         if(isSelected)
@@ -115,5 +110,11 @@
             FavoriteCount--;
         }
     }
+
+    protected void UpdateSelectedProduct(string productName)
+    {
+        SelectedProduct = productName;
+    }
+
 
 }
